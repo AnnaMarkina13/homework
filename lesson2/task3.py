@@ -25,5 +25,13 @@ months_dict = {
     11: {'month': 'ноябрь', 'season': 'осень'},
     12: {'month': 'декабрь', 'season': 'зима'}
 }
+months_dict_1 = {
+    "winter": [12, 1, 2],
+    "spring": [3, 4, 5],
+    "summer": [6, 7, 8],
+    "autumn": [9, 10, 11]
+}
 print(f"Ваш месяц ({months_dict[month_number]['month']}) относится "
       f"к времени года: {months_dict[month_number]['season']}.")
+
+print(list(filter(lambda i: month_number in i[1], months_dict_1.items())))
