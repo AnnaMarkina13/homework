@@ -1,18 +1,25 @@
 import time
 from turtle import Turtle
 
+GREEN = "green"
+
+YELLOW = "yellow"
+
+RED = "red"
+
 
 class Trafficlight:
     __turtle = Turtle()
     __actions = {
-        "red": lambda tl: tl.__turn_on_and_wait(tl.__red_light, tl.__color, 7),
-        "yellow": lambda tl: tl.__turn_on_and_wait(tl.__yellow_light, tl.__color, 2),
-        "green": lambda tl: tl.__turn_on_and_wait(tl.__green_light, tl.__color, 7)
+        RED: lambda tl: tl.__turn_on_and_wait(tl.__red_light, tl.__color, 1),
+        YELLOW: lambda tl: tl.__turn_on_and_wait(tl.__yellow_light, tl.__color, 1),
+        GREEN: lambda tl: tl.__turn_on_and_wait(tl.__green_light, tl.__color, 1)
     }
 
     def __init__(self, panel_color):
         super().__init__()
-        self.__color = "red"
+        self.__prev_color = None
+        self.__color = None
         self.__init_panel(panel_color)
         self.__red_light = self.__light(40)
         self.__yellow_light = self.__light(0)
@@ -32,9 +39,15 @@ class Trafficlight:
             self.__turtle.right(90)
 
     def color(self, color):
-        if color not in ("red", "yellow", "green"):
-            print(f"Некорректный цвет: {color}")
+        if color not in (RED, YELLOW, GREEN):
+            raise Exception(f"Некорректный цвет: {color}")
+        elif self.__color == RED and color != YELLOW \
+                or self.__color == GREEN and color != YELLOW \
+                or self.__color == YELLOW and self.__prev_color == GREEN and color != RED \
+                or self.__color == YELLOW and self.__prev_color == RED and color != GREEN:
+            raise Exception("Некорректная последовательность")
         else:
+            self.__prev_color = self.__color
             self.__color = color
 
     def running(self):
@@ -58,11 +71,11 @@ class Trafficlight:
 
 trafficlight = Trafficlight("purple")
 while True:
-    trafficlight.color("red")
+    trafficlight.color(RED)
     trafficlight.running()
-    trafficlight.color("yellow")
+    trafficlight.color(YELLOW)
     trafficlight.running()
-    trafficlight.color("green")
+    trafficlight.color(GREEN)
     trafficlight.running()
-    trafficlight.color("yellow")
+    trafficlight.color(YELLOW)
     trafficlight.running()
